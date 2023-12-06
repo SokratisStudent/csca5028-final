@@ -1,4 +1,4 @@
-from main import db
+from app import db
 from datetime import datetime
 from settings import settings_data
 from components.public_holidays.src.country_db_model import Country
