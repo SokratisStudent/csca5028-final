@@ -1,18 +1,13 @@
 from flask import request, render_template
 
-from settings import settings_data
+from datetime import datetime
+
 from webapp.app import create_app
-from components.database.main import create_db
+from components.database.main import db
 
-from components.public_holidays.src.public_holidays_http_request import PublicHolidayRequest
-
-app = create_app()
-db = create_db(app)
+app = create_app(db)
 
 from components.public_holidays.src.public_holiday_control import getHolidays
-
-with app.app_context():
-    db.create_all()
 
 @app.route("/")
 def main():
@@ -31,9 +26,18 @@ def add_person():
     name = request.form.get("name", "")
     country = request.form.get("country", "")
 
-    holidays = getHolidays(country)
+    holidays = getHolidays(country, datetime.now().year)
 
-    return "Created " + name + " working in " + country + " with " + str(len(holidays)) + " holidays"
+    return_html = (f'<p>Created {name} working in {country} with the following holidays: ' +
+                   '</p><table style="width:30%"><tr><th style="width:80%">Name</th><th>Date</th></tr>')
+
+    for holiday in holidays:
+        return_html += f'<tr><td>{holiday.name}</td><td>{holiday.date:%d-%m-%Y}</td></tr>'
+
+    return_html += '</table>'
+
+    return return_html
+
 
 @app.route("/getCountry", methods=["GET"])
 

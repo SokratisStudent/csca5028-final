@@ -1,4 +1,4 @@
-from app import db
+from components.database.main import db
 
 
 class Person(db.Model):
