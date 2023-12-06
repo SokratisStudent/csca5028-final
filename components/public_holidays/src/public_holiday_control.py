@@ -1,9 +1,9 @@
 from main import db
 from datetime import datetime
 from settings import settings_data
-from country_db_model import Country
-from public_holidays_db_model import PublicHoliday
-from public_holidays_http_request import PublicHolidayRequest
+from components.public_holidays.src.country_db_model import Country
+from components.public_holidays.src.public_holidays_db_model import PublicHoliday
+from components.public_holidays.src.public_holidays_http_request import PublicHolidayRequest
 
 
 def parseRequest(country_code: str, holidays: dict) -> list[PublicHoliday]:
