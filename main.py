@@ -4,14 +4,13 @@ from datetime import datetime
 
 from webapp.app import create_app
 from components.database.main import db
+from components.public_holidays.src.public_holiday_control import getHolidays
 
 app = create_app(db)
 
-from components.public_holidays.src.public_holiday_control import getHolidays
 
 @app.route("/")
 def main():
-
     return render_template("index.html")
 
 
