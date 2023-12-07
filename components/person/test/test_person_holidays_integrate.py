@@ -6,11 +6,13 @@ from webapp.src.init_app import create_test_app
 from components.person.src.person_control import createPerson, parseVacationsRequest, createVacations, getAllAbsencesForPerson
 from components.person.src.person_db_model import Person
 from components.public_holidays.src.public_holidays_db_model import PublicHoliday
+from components.project.src.project_control import createProject, getProjectByName
 
-
-class TestPersonalVacationIntegration(TestCase):
+class TestPersonVacationIntegration(TestCase):
     def setup_class(self):
         self.app = create_test_app(db)
+        with self.app.app_context():
+            createProject("TestProject")
 
     def teardown_class(self):
         with self.app.app_context():
@@ -19,7 +21,7 @@ class TestPersonalVacationIntegration(TestCase):
 
     def test_createPerson_checkHolidays(self):
         with self.app.app_context():
-            person = createPerson("TestGuy2", "TV")
+            person = createPerson("TestGuy2", "TV", "TestProject")
             assert person is not None
             assert person.country_name == "Tuvalu"
 
@@ -37,7 +39,7 @@ class TestPersonalVacationIntegration(TestCase):
 
     def test_createVacationsFromEmail(self):
         with self.app.app_context():
-            createPerson("Maria", "US")
+            createPerson("Maria", "US", "TestProject")
             (person, vacation_list) = parseVacationsRequest('Maria wants to take tomorrow off')
             createVacations(person, vacation_list)
 

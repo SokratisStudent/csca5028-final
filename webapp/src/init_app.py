@@ -14,7 +14,7 @@ def create_app(db: SQLAlchemy) -> Flask:
 
 
 def create_test_app(db: SQLAlchemy) -> Flask:
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder='../html')
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test_vacations.sqlite3'
     db.init_app(app)
 

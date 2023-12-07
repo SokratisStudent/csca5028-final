@@ -1,13 +1,11 @@
 from flask import request, render_template, url_for, redirect
-
-from datetime import datetime
+import json
 
 from webapp.src.init_app import create_app
 from components.database.main import db
 from components.person.src.person_db_model import Person
-from components.person.src.person_control import createPerson, parseVacationsRequest, createVacations, PersonalVacationObj
-from components.public_holidays.src.public_holiday_control import getHolidays
-from components.project.src.project_control import getActiveProjects, createProject
+from components.person.src.person_control import createPerson, parseVacationsRequest, createVacations, PersonalVacationObj, getAllAbsencesForPerson
+from components.project.src.project_control import getActiveProjects, createProject, getAllPeopleInProject
 
 app = create_app(db)
 current_person: Person = None
@@ -19,8 +17,22 @@ def main():
 
 
 @app.route("/projects")
-def projects():
-    return render_template("projects.html", projects=getActiveProjects())
+def projects(test_mode:bool=False):
+    full_data = {}
+    active_projects = getActiveProjects()
+    for project in active_projects:
+        full_data[project.name] = []
+        people = getAllPeopleInProject(project)
+        for employee in people:
+            absences = getAllAbsencesForPerson(employee)
+            full_data[project.name].append((employee.name, [absence.strftime("%Y-%m-%d") for absence in absences]))
+
+    project_data = json.dumps(full_data)
+
+    if test_mode:
+        return project_data
+
+    return render_template("projects.html", project_data=project_data)
 
 
 @app.route("/person")
@@ -78,12 +90,13 @@ def vacation_email_accept():
 def add_person():
     name = request.form.get("name", "")
     country = request.form.get("country", "")
+    project_name = request.form.get("project", "")
 
-    new_person = createPerson(name, country)
+    new_person = createPerson(name, country, project_name)
     if new_person is None:
         return render_template("error.html", error_message=f'{name} already exists in the database!')
 
-    return render_template("success.html", success_message=f'Successfully created {new_person.name} working in {new_person.country_name}')
+    return render_template("success.html", success_message=f'Successfully created {new_person.name} working in {new_person.country_name} for {project_name}')
 
 
 @app.route("/createProject", methods=["POST"])

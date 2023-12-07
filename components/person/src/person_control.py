@@ -6,10 +6,11 @@ from components.database.main import db
 from settings import settings_data
 from components.person.src.person_db_model import Person
 from components.person.src.personal_vacations_db_model import PersonalVacation
-from components.person.src.personal_vacations_http_request import PersonalVacationRequest
-from components.public_holidays.src.public_holiday_control import generateCountryAndHolidays
 from components.public_holidays.src.country_db_model import Country
 from components.public_holidays.src.public_holidays_db_model import PublicHoliday
+from components.person.src.personal_vacations_http_request import PersonalVacationRequest
+from components.public_holidays.src.public_holiday_control import generateCountryAndHolidays
+from components.project.src.project_control import getProjectByName
 
 
 class PersonObj:
@@ -26,17 +27,18 @@ class PersonalVacationObj:
     start_date: datetime
     end_date: datetime
 
-    def __init__(self, name: str, start_date: datetime, end_date: datetime) -> None:
+    def __init__(self, name: str, start_date: str, end_date: str) -> None:
         self.name = name
-        self.start_date = datetime.strptime(start_date.__str__(), "%Y-%m-%d")
-        self.end_date = datetime.strptime(end_date.__str__(), "%Y-%m-%d")
+        self.start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        self.end_date = datetime.strptime(end_date, "%Y-%m-%d")
 
     def __str__(self) -> str:
         return f'{self.name}: from {self.start_date.strftime("%x")} to {self.end_date.strftime("%x")}'
 
 
-def createPerson(name: str, country: str) -> PersonObj:
-    person_entry = Person(name=name, country_code=country)
+def createPerson(name: str, country: str, project_name: str) -> PersonObj:
+    project_id = getProjectByName(project_name).id
+    person_entry = Person(name=name, country_code=country, project_id=project_id)
     try:
         db.session.add(person_entry)
         db.session.commit()

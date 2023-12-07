@@ -9,9 +9,12 @@
     <br>
     <h3> Existing projects </h3>
     <div style="margin: auto">
-        {% for project in projects %}
+        {% for project in project_data.keys() %}
         <div style="padding: 10px; background-color: #EEE; margin: 20px">
-            <p style="font-size: 24px"> {{ project.name }} </p>
+            <p style="font-size: 24px"> {{ project }} </p>
+            {% for data in project_data[project] %}
+                <p style="font-size: 12px"> {{ data }} </p>
+            {% endfor %}
         </div>
         {% endfor %}
     </div>

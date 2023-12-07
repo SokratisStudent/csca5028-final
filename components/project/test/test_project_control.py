@@ -21,16 +21,16 @@ class TestProjectControl(TestCase):
             project_list = getActiveProjects()
             assert len(project_list) == 0
             result = createProject("RandomProject1")
-            assert result is True
+            assert result is not None
             project_list = getActiveProjects()
             assert len(project_list) == 1
             assert project_list[0].name == "RandomProject1"
             result = createProject("RandomProject2")
-            assert result is True
+            assert result is not None
             project_list = getActiveProjects()
             assert len(project_list) == 2
             result = createProject("RandomProject1")
-            assert result is False
+            assert result is None
             project_list = getActiveProjects()
             assert len(project_list) == 2
 
