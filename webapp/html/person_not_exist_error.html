@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{% block title %} The person {{ name }} in the email is not present in the system! Please add the person before trying to add vacation time for them. {% endblock %}</h2>
+    <a href="{{ url_for('main') }}">Ok</a>
+{% endblock %}

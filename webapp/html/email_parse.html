@@ -10,8 +10,12 @@
         </div>
         {% endfor %}
     </div>
-    <form>
-        <input type="submit" value="Accept">
-        <input type="button" value="Cancel">
+
+    <form name="buttons" action="/vacationEmail/process" method="POST" onsubmit="onSubmit()">
+        <input type="submit" name="accept" id="accept" value="Accept" onclick="acceptFunction()">
+        <input type="submit" name="reject" id="reject" value="Reject" onclick="rejectFunction()">
     </form>
 {% endblock %}
+
+function acceptFunction() { document.buttons.accept.value  = "Accepted"; }
+function rejectFunction() { document.buttons.accept.value  = "Rejected"; }

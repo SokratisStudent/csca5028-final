@@ -16,7 +16,7 @@ pytest -v
  flask --debug --app main.py run
 ```
 To test:
-(a) open browser to http://localhost:5000/createPerson
+(a) open browser to http://localhost:5000/
 (b) Add any name in any country, this will add the public holidays of that country in the database (as given by https://api-ninjas.com/api/holidays)
 
 ### Look at the database data (requires sqlite3 installation)

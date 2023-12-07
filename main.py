@@ -4,11 +4,13 @@ from datetime import datetime
 
 from webapp.src.init_app import create_app
 from components.database.main import db
-from components.personal_vacations.src.person_control import createPerson, parseVacationsRequest
+from components.personal_vacations.src.person_db_model import Person
+from components.personal_vacations.src.person_control import createPerson, parseVacationsRequest, createVacations, PersonalVacationObj
 from components.public_holidays.src.public_holiday_control import getHolidays
 
 app = create_app(db)
-
+current_person: Person
+current_vacations_requested: list[PersonalVacationObj] = []
 
 @app.route("/")
 def main():
@@ -30,21 +32,42 @@ def vacation_email():
     return render_template("vacation_email.html")
 
 
-@app.route("/vacationEmail/process", methods=["POST"])
+@app.route("/vacationEmail/display", methods=["POST"])
 def vacation_email_parse():
     email_text = request.form.get("email_text", "")
 
-    vacations_requested = parseVacationsRequest(email_text)
+    global current_person
+    global current_vacations_requested
+    current_person, current_vacations_requested = parseVacationsRequest(email_text)
+
+    if current_person == None:
+        return render_template("person_not_exist_error.html")
 
     table_html = (f'<p> Email analysis indicates the below vacations will be taken: ' +
-                   '</p><table style="width:30%"><tr><th style="width:50%">Name</th><th>Date from</th><th>Date to</th></tr>')
+            '</p><table style="width:30%"><tr><th style="width:50%">Name</th><th>Date from</th><th>Date to</th></tr>')
 
-    for vacation in vacations_requested:
+    for vacation in current_vacations_requested:
         table_html += f'<tr><td>{vacation.name}</td><td>{vacation.start_date}</td><td>{vacation.end_date}</td></tr>'
 
     table_html += '</table>'
 
-    return render_template('email_parse.html', vacations=vacations_requested)
+    return render_template('email_parse.html', vacations=current_vacations_requested)
+
+
+@app.route("/vacationEmail/process", methods=["POST"])
+def vacation_email_accept():
+    accept_result = request.form.get('accept')
+    reject_result = request.form.get('reject')
+
+    global current_person
+    global current_vacations_requested
+
+    if accept_result == "Accept" and reject_result is None and current_person is not None and len(current_vacations_requested) > 0:
+        createVacations(current_person, current_vacations_requested)
+        current_person = None
+        current_vacations_requested = []
+
+    return render_template("index.html")
 
 
 @app.route("/createPerson", methods=["POST"])

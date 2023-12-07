@@ -48,14 +48,25 @@ def createPerson(name: str, country: str) -> PersonObj:
     return PersonObj(person_entry.name, country_entry.name)
 
 
-def parseVacationsRequest(text_request: str) -> list[PersonalVacationObj]:
+def parseVacationsRequest(text_request: str) -> (Person, list[PersonalVacationObj]):
     vacation_request = PersonalVacationRequest(settings_data)
     response = vacation_request.fetch_data(text_request)
 
-    result = []
-    for vacation in response:
-        vac_obj = PersonalVacationObj(vacation['name'], vacation['start_date'], vacation['end_date'])
-        result.append(vac_obj)
+    person: Person = None
+    result: list[PersonalVacationObj] = []
+    if len(response) > 0:
+        person = Person.query.filter_by(name=response[0]['name']).first()
+        if person is not None:
+            for vacation in response:
+                vac_obj = PersonalVacationObj(vacation['name'], vacation['start_date'], vacation['end_date'])
+                result.append(vac_obj)
 
-    return result
+    return person, result
 
+
+def createVacations(person: Person, vacations: list[PersonalVacationObj]) -> None:
+    for vacation in vacations:
+        vacation_entry = PersonalVacation(person_id=person.id, start_date=vacation.start_date, end_date=vacation.end_date)
+        db.session.add(vacation_entry)
+
+    db.session.commit()

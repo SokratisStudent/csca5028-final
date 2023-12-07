@@ -3,8 +3,9 @@ from datetime import datetime
 
 from components.database.main import db
 from webapp.src.init_app import create_test_app
-from components.personal_vacations.src.person_control import PersonalVacationObj, createPerson
+from components.personal_vacations.src.person_control import PersonalVacationObj, createPerson, createVacations
 from components.personal_vacations.src.person_db_model import Person
+from components.personal_vacations.src.personal_vacations_db_model import PersonalVacation
 
 
 class TestPersonalVacationController(TestCase):
@@ -31,8 +32,25 @@ class TestPersonalVacationController(TestCase):
         to_string = vacation.__str__()
         assert to_string == 'John: from 12/07/23 to 12/17/23' or vacation == 'John: from 07/12/23 to 17/12/23'
 
-    def test_parseVacationsRequest(self):
-        # TODO
-        pass
+    def test_createVacations(self):
+        with self.app.app_context():
+            person = createPerson("TestGuy", "US")
+            person_entry = Person.query.filter_by(name="TestGuy").first()
+            vacations = [PersonalVacationObj("TestGuy", datetime.strptime("20231207", "%Y%m%d"),datetime.strptime("20231217", "%Y%m%d"))]
+            createVacations(person_entry, vacations)
+
+            vacation_entries = PersonalVacation.query.filter_by(person_id=person_entry.id).all()
+
+            assert len(vacation_entries) == 1
+            assert vacation_entries[0].start_date == datetime.strptime("20231207", "%Y%m%d")
+            assert vacation_entries[0].end_date == datetime.strptime("20231217", "%Y%m%d")
+
+            more_vacations = [PersonalVacationObj("TestGuy", datetime.strptime("20240102", "%Y%m%d"),datetime.strptime("20230104", "%Y%m%d")), PersonalVacationObj("TestGuy", datetime.strptime("20240202", "%Y%m%d"),datetime.strptime("20230204", "%Y%m%d"))]
+            createVacations(person_entry, more_vacations)
+
+            vacation_entries = PersonalVacation.query.filter_by(person_id=person_entry.id).all()
+
+            assert len(vacation_entries) == 3
+
 
 
