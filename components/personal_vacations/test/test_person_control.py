@@ -3,7 +3,7 @@ from datetime import datetime
 
 from components.database.main import db
 from webapp.src.init_app import create_test_app
-from components.personal_vacations.src.person_control import PersonalVacationObj, createPerson, parseVacationsRequest
+from components.personal_vacations.src.person_control import PersonalVacationObj, createPerson
 from components.personal_vacations.src.person_db_model import Person
 
 

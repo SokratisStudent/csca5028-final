@@ -47,12 +47,6 @@ def vacation_email_parse():
     return render_template('email_parse.html', vacations=vacations_requested)
 
 
-#@app.route("/createProject", methods=["POST"])
-#def add_project():
-#    project_name = request.form.get("project_name", "")
-#    return "Successfully created " + project_name + " project."
-
-
 @app.route("/createPerson", methods=["POST"])
 def add_person():
     name = request.form.get("name", "")
@@ -72,3 +66,7 @@ def add_person():
     return return_html
 
 
+#@app.route("/createProject", methods=["POST"])
+#def add_project():
+#    project_name = request.form.get("project_name", "")
+#    return "Successfully created " + project_name + " project."
