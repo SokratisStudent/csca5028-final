@@ -4,7 +4,7 @@ from components.database.main import createTables
 
 
 def create_app(db: SQLAlchemy) -> Flask:
-    app = Flask(__name__, template_folder='html')
+    app = Flask(__name__, template_folder='../html')
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///vacations.sqlite3'
     db.init_app(app)
 

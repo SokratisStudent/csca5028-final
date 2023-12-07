@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Vacations {% endblock %}</h1>
+    <div style="margin: auto">
+        <p style="font-size: 24px"> {{ vacations[0].name }}: </p>
+        {% for vacation in vacations %}
+        <div style="padding: 10px; background-color: #EEE; margin: 20px">
+            <p style="font-size: 24px"> From {{ vacation.start_date }} to {{ vacation.end_date }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    <form>
+        <input type="submit" value="Accept">
+        <input type="button" value="Cancel">
+    </form>
+{% endblock %}

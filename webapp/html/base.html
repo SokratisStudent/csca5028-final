@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} {% endblock %} - Project Vacation Manager </title>
+    <style>
+        nav a {
+            color: #164161;
+            font-size: 2em;
+            margin-left: 50px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{{ url_for('projects') }}">View Projects</a>
+        <a href="{{ url_for('person') }}">Add a new person</a>
+        <a href="{{ url_for('vacation_email') }}">Add vacation time</a>
+    </nav>
+    <hr>
+    <div class="content">
+        {% block content %} {% endblock %}
+    </div>
+</body>
+</html>

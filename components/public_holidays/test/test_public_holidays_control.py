@@ -1,9 +1,8 @@
-import json
 from unittest import TestCase
 from datetime import datetime
 
 from components.database.main import db
-from webapp.app import create_test_app
+from webapp.src.init_app import create_test_app
 from components.public_holidays.src.public_holiday_control import parseRequest
 
 
@@ -41,6 +40,9 @@ class TestPublicHolidayControl(TestCase):
         assert result[10].name == 'Ochi Day'
         assert result[10].type == 'NATIONAL_HOLIDAY'
         assert result[10].date == datetime.strptime('2024-10-28', "%Y-%m-%d")
+
+        def test_getHolidays():
+            pass
 
 
 

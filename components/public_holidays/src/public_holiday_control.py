@@ -29,7 +29,13 @@ def parseRequest(country_code: str, holidays: list[dict]) -> list[PublicHoliday]
     return data
 
 
-def getHolidays(country: str, year: int) -> list[PublicHolidayObj]:
+def getHolidays(country: str) -> list[PublicHolidayObj]:
+    holidays = PublicHoliday.query.filter_by(country_code=country).all()
+
+    return [PublicHolidayObj(holiday) for holiday in holidays]
+
+
+def generateCountryAndHolidays(country: str, year: int) -> list[PublicHolidayObj]:
     country_entry = Country.query.filter_by(country_code=country).all()
 
     # Fetch the public holidays for this country
@@ -48,6 +54,4 @@ def getHolidays(country: str, year: int) -> list[PublicHolidayObj]:
         db.session.add(country_entry)
         db.session.commit()
 
-    holidays = PublicHoliday.query.filter_by(country_code=country).all()
-
-    return [PublicHolidayObj(holiday) for holiday in holidays]
+    return getHolidays(country)

@@ -1,9 +1,8 @@
-import json
 from unittest import TestCase
 
 from components.database.main import db
-from webapp.app import create_test_app
-from components.public_holidays.src.public_holiday_control import getHolidays
+from webapp.src.init_app import create_test_app
+from components.public_holidays.src.public_holiday_control import generateCountryAndHolidays
 from components.public_holidays.src.country_db_model import Country
 from components.public_holidays.src.public_holidays_db_model import PublicHoliday
 
@@ -17,14 +16,14 @@ class TestPublicHolidayIntegrate(TestCase):
             db.drop_all()
             db.session.close()
 
-    def test_getHolidays(self):
+    def test_generateCountryAndHolidays(self):
         with self.app.app_context():
             # Ensure no entries for test country CY
             holiday_entries_before = len(PublicHoliday.query.all())
             country_entry = Country.query.filter_by(country_code="CY").all()
             assert len(country_entry) == 0
 
-            holidays = getHolidays("CY", 2024)
+            holidays = generateCountryAndHolidays("CY", 2024)
             assert len(holidays) == 11
 
             # Ensure test country CY was added with all its holidays
@@ -34,7 +33,7 @@ class TestPublicHolidayIntegrate(TestCase):
             holiday_entries_mid = len(PublicHoliday.query.all())
             assert (holiday_entries_before == (holiday_entries_mid - 11))
 
-            holidays = getHolidays("CY", 2024)
+            holidays = generateCountryAndHolidays("CY", 2024)
             assert len(holidays) == 11
 
             # Ensure the test country or its holidays were not added twice
