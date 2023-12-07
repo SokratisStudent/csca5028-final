@@ -8,11 +8,23 @@ from components.public_holidays.src.public_holiday_control import getHolidays
 
 app = create_app(db)
 
-
 @app.route("/")
 def main():
     return render_template("index.html")
 
+
+@app.route("/vacationEmail")
+def vacation_email():
+    return render_template("vacation_email.html")
+
+
+@app.route("/vacationEmail/process", methods=["POST"])
+def vacation_email_parse():
+    email_text = request.form.get("email_text", "")
+
+    vacations_requested = parseVacationsRequest(email_text)
+
+    return ''
 
 #@app.route("/createProject", methods=["POST"])
 #def add_project():

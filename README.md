@@ -1,5 +1,5 @@
-# csca5028-data-collection
-Data Collection Project for CSCA 5028 - Applications of Software Architecture for Big Data
+# csca5028-final-project
+Final Project for CSCA 5028 - Applications of Software Architecture for Big Data
 
 ### Initialize python environment
 ```bash

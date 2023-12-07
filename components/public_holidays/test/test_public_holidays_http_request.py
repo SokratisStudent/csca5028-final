@@ -9,12 +9,12 @@ class TestPublicHolidaysHttpRequest(TestCase):
         holiday_request = PublicHolidayRequest(settings_data)
         holidays = holiday_request.fetch_data("CY", 2024)
 
-        assert 11 == len(holidays)
+        assert len(holidays) == 11
 
         holidays = holiday_request.fetch_data("US", 2023)
 
-        assert 3 == len(holidays)
+        assert len(holidays) == 3
 
         holidays = holiday_request.fetch_data("SP", 2024)
 
-        assert 8 == len(holidays)
+        assert len(holidays) == 8

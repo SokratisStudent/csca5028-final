@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from components.database.main import createTables
 
 
 def create_app(db: SQLAlchemy) -> Flask:
@@ -7,11 +8,7 @@ def create_app(db: SQLAlchemy) -> Flask:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///vacations.sqlite3'
     db.init_app(app)
 
-    from components.public_holidays.src.public_holidays_db_model import PublicHoliday
-    from components.public_holidays.src.country_db_model import Country
-
-    with app.app_context():
-        db.create_all()
+    createTables(app)
 
     return app
 
@@ -21,10 +18,6 @@ def create_test_app(db: SQLAlchemy) -> Flask:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test_vacations.sqlite3'
     db.init_app(app)
 
-    from components.public_holidays.src.public_holidays_db_model import PublicHoliday
-    from components.public_holidays.src.country_db_model import Country
-
-    with app.app_context():
-        db.create_all()
+    createTables(app)
 
     return app

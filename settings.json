@@ -3,5 +3,13 @@
   {
     "url": "https://api.api-ninjas.com/v1/holidays",
     "api-key": "F1F0XAxjG7fHmsDpn1ku/g==nKr6RwaFiRLDuGr6"
+  },
+
+  "personal_vacations":
+  {
+    "url": "https://generativelanguage.googleapis.com/v1beta3/models/text-bison-001:generateText",
+    "api-key": "AIzaSyDeMJ2AJwMW67IG0wA5lXusYe65kd5t-VE",
+    "ai-prompt": "Please parse the following email request and give me the dates that this person wants to go on vacation as a json in the following format:{ \"name\": PERSON_NAME, \"start_date\": START_DATE, \"end_date\": END_DATE }\nIf there are multiple vacation date periods, please return multiple json.\nPlease reply only with the json without any other text.\nYou should ensure that all dates returned should be after today",
+    "ai-temperature": "0.2"
   }
 }

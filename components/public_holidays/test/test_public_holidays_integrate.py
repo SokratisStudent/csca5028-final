@@ -22,24 +22,24 @@ class TestPublicHolidayIntegrate(TestCase):
             # Ensure no entries for test country CY
             holiday_entries_before = len(PublicHoliday.query.all())
             country_entry = Country.query.filter_by(country_code="CY").all()
-            assert (0 == len(country_entry))
+            assert len(country_entry) == 0
 
             holidays = getHolidays("CY", 2024)
-            assert 11 == len(holidays)
+            assert len(holidays) == 11
 
             # Ensure test country CY was added with all its holidays
             country_entry = Country.query.filter_by(country_code="CY").all()
-            assert (1 == len(country_entry))
+            assert len(country_entry) == 1
 
             holiday_entries_mid = len(PublicHoliday.query.all())
             assert (holiday_entries_before == (holiday_entries_mid - 11))
 
             holidays = getHolidays("CY", 2024)
-            assert 11 == len(holidays)
+            assert len(holidays) == 11
 
             # Ensure the test country or its holidays were not added twice
             country_entry = Country.query.filter_by(country_code="CY").all()
-            assert (1 == len(country_entry))
+            assert len(country_entry) == 1
 
             holiday_entries_after = len(PublicHoliday.query.all())
             assert (holiday_entries_mid == holiday_entries_after)
