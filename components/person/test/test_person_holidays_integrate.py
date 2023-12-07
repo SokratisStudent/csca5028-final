@@ -1,9 +1,9 @@
 from unittest import TestCase
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from components.database.main import db
 from webapp.src.init_app import create_test_app
-from components.person.src.person_control import createPerson
+from components.person.src.person_control import createPerson, parseVacationsRequest, createVacations, getAllAbsencesForPerson
 from components.person.src.person_db_model import Person
 from components.public_holidays.src.public_holidays_db_model import PublicHoliday
 
@@ -35,3 +35,15 @@ class TestPersonalVacationIntegration(TestCase):
                 holiday_date = holiday.date.date()
                 assert holiday_date.year == current_year or (current_month > 10 and holiday_date.year == current_year+1)
 
+    def test_createVacationsFromEmail(self):
+        with self.app.app_context():
+            createPerson("Maria", "US")
+            (person, vacation_list) = parseVacationsRequest('Maria wants to take tomorrow off')
+            createVacations(person, vacation_list)
+
+            dates = getAllAbsencesForPerson(person)
+
+            assert len(dates) == 6
+
+            tomorrow = datetime.now().date() + timedelta(days=1)
+            assert tomorrow in dates

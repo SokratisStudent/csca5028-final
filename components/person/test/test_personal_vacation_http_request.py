@@ -36,8 +36,6 @@ class TestPersonalVacationHttpRequest(TestCase):
         vacation_request = PersonalVacationRequest(settings_data)
         response = vacation_request.fetch_data(email_2)
 
-        print(response)
-
         assert len(response) == 2
         assert response[0]['name'] == 'Oscar'
         assert response[1]['name'] == 'Oscar'

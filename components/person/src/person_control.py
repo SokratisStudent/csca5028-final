@@ -1,13 +1,15 @@
 import sqlalchemy.exc
 
+from datetime import datetime, timedelta
+
 from components.database.main import db
-from datetime import datetime
 from settings import settings_data
 from components.person.src.person_db_model import Person
 from components.person.src.personal_vacations_db_model import PersonalVacation
 from components.person.src.personal_vacations_http_request import PersonalVacationRequest
 from components.public_holidays.src.public_holiday_control import generateCountryAndHolidays
 from components.public_holidays.src.country_db_model import Country
+from components.public_holidays.src.public_holidays_db_model import PublicHoliday
 
 
 class PersonObj:
@@ -26,8 +28,8 @@ class PersonalVacationObj:
 
     def __init__(self, name: str, start_date: datetime, end_date: datetime) -> None:
         self.name = name
-        self.start_date = start_date
-        self.end_date = end_date
+        self.start_date = datetime.strptime(start_date.__str__(), "%Y-%m-%d")
+        self.end_date = datetime.strptime(end_date.__str__(), "%Y-%m-%d")
 
     def __str__(self) -> str:
         return f'{self.name}: from {self.start_date.strftime("%x")} to {self.end_date.strftime("%x")}'
@@ -76,3 +78,20 @@ def createVacations(person: Person, vacations: list[PersonalVacationObj]) -> Non
         db.session.add(vacation_entry)
 
     db.session.commit()
+
+
+def getAllAbsencesForPerson(person: Person) -> list[datetime]:
+    dates = []
+
+    holidays = PublicHoliday.query.filter_by(country_code=person.country_code).all()
+    for holiday in holidays:
+        dates.append(holiday.date.date())
+
+    vacations = PersonalVacation.query.filter_by(person_id=person.id).all()
+    for vacation in vacations:
+        current = vacation.start_date
+        while current <= vacation.end_date:
+            dates.append(current.date())
+            current += timedelta(days=1)
+
+    return dates

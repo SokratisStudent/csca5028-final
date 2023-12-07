@@ -14,6 +14,11 @@ def createProject(name: str) -> bool:
         db.session.rollback()
         return False
 
-
 def getActiveProjects() -> list[Project]:
     return Project.query.all()
+
+
+def getAllPeopleInProject(project: Project) -> list[Person]:
+    return []
+
+

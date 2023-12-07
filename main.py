@@ -10,7 +10,7 @@ from components.public_holidays.src.public_holiday_control import getHolidays
 from components.project.src.project_control import getActiveProjects, createProject
 
 app = create_app(db)
-current_person: Person
+current_person: Person = None
 current_vacations_requested: list[PersonalVacationObj] = []
 
 @app.route("/")
@@ -25,7 +25,8 @@ def projects():
 
 @app.route("/person")
 def person():
-    return render_template("person.html")
+    project_list = getActiveProjects()
+    return render_template("person.html", project_list=project_list)
 
 
 @app.route("/vacationEmail")
@@ -41,7 +42,7 @@ def vacation_email_parse():
     global current_vacations_requested
     current_person, current_vacations_requested = parseVacationsRequest(email_text)
 
-    if current_person == None:
+    if current_person is None:
         return render_template("error.html", error_message=f'Could not identify an existing entry in the system for the person asking for vacation! Please add the person before trying to add vacation time for them.')
 
     table_html = (f'<p> Email analysis indicates the below vacations will be taken: ' +
@@ -65,10 +66,12 @@ def vacation_email_accept():
 
     if accept_result == "Accept" and reject_result is None and current_person is not None and len(current_vacations_requested) > 0:
         createVacations(current_person, current_vacations_requested)
+        name = current_person.name
         current_person = None
         current_vacations_requested = []
+        return render_template("success.html", success_message=f'Successfully created vacations for {name}')
 
-    return render_template("index.html")
+    return redirect(url_for('/'))
 
 
 @app.route("/createPerson", methods=["POST"])
@@ -80,17 +83,7 @@ def add_person():
     if new_person is None:
         return render_template("error.html", error_message=f'{name} already exists in the database!')
 
-    holidays = getHolidays(country)
-
-    return_html = (f'<p>Created {new_person.name} working in {new_person.country_name} with the following holidays: ' +
-                   '</p><table style="width:30%"><tr><th style="width:80%">Name</th><th>Date</th></tr>')
-
-    for holiday in holidays:
-        return_html += f'<tr><td>{holiday.name}</td><td>{holiday.date:%d-%m-%Y}</td></tr>'
-
-    return_html += '</table>'
-
-    return return_html
+    return render_template("success.html", success_message=f'Successfully created {new_person.name} working in {new_person.country_name}')
 
 
 @app.route("/createProject", methods=["POST"])
@@ -101,5 +94,3 @@ def add_project():
         return render_template("error.html", error_message=f'{project_name} already exists in the database!')
 
     return redirect(url_for('projects'))
-
-

@@ -267,6 +267,14 @@
         </select>
         <br>
         <br>
+        <select class="form-select" id="project" name="project">
+            <option value="" disabled selected>Select Project assignment</option>
+            {% for project in project_list %}
+            <option>{{ project.name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <br>
         <input type="submit" value="Submit">
     </form>
 {% endblock %}
