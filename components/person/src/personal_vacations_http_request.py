@@ -6,11 +6,11 @@ from datetime import datetime
 class PersonalVacationRequest:
 
     def __init__(self, settings: dict):
-        self.url = settings['personal_vacations']['url']
-        self.api_key = settings['personal_vacations']['api-key']
+        self.url = settings['person']['url']
+        self.api_key = settings['person']['api-key']
         self.headers = {"Content-Type": "application/json"}
-        self.prompt = settings['personal_vacations']['ai-prompt']
-        self.temperature = settings['personal_vacations']['ai-temperature']
+        self.prompt = settings['person']['ai-prompt']
+        self.temperature = settings['person']['ai-temperature']
 
     def fetch_data(self, email_text: str) -> list[dict]:
         querystring = {"key": self.api_key}

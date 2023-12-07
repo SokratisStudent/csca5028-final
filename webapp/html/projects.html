@@ -1,5 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Projects</h1>
+    <h3> Create New project </h3>
+    <form action="/createProject" method="POST">
+        <label for="project_name"> Project Name: </label><input type="text" id="project_name" name="project_name">
+    </form>
+    <br>
+    <br>
+    <h3> Existing projects </h3>
+    <div style="margin: auto">
+        {% for project in projects %}
+        <div style="padding: 10px; background-color: #EEE; margin: 20px">
+            <p style="font-size: 24px"> {{ project.name }} </p>
+        </div>
+        {% endfor %}
+    </div>
+
 {% endblock %}

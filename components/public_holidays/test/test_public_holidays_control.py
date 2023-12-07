@@ -7,7 +7,6 @@ from components.public_holidays.src.public_holiday_control import parseRequest
 
 
 class TestPublicHolidayControl(TestCase):
-
     def setup_class(self):
         self.app = create_test_app(db)
 

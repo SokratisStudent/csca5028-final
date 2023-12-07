@@ -3,9 +3,9 @@ from datetime import datetime
 
 from components.database.main import db
 from webapp.src.init_app import create_test_app
-from components.personal_vacations.src.person_control import PersonalVacationObj, createPerson, createVacations
-from components.personal_vacations.src.person_db_model import Person
-from components.personal_vacations.src.personal_vacations_db_model import PersonalVacation
+from components.person.src.person_control import PersonalVacationObj, createPerson, createVacations
+from components.person.src.person_db_model import Person
+from components.person.src.personal_vacations_db_model import PersonalVacation
 
 
 class TestPersonalVacationController(TestCase):
@@ -26,6 +26,9 @@ class TestPersonalVacationController(TestCase):
             person_entry = Person.query.filter_by(name=person.name).all()
             assert len(person_entry) == 1
             assert person_entry[0].country_code == "US"
+
+            person = createPerson("TestGuy", "SP")
+            assert person is None
 
     def test_personal_vacation_class(self):
         vacation = PersonalVacationObj("John", datetime.strptime("20231207", "%Y%m%d"), datetime.strptime("20231217", "%Y%m%d"))

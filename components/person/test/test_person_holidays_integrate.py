@@ -3,8 +3,8 @@ from datetime import datetime
 
 from components.database.main import db
 from webapp.src.init_app import create_test_app
-from components.personal_vacations.src.person_control import createPerson
-from components.personal_vacations.src.person_db_model import Person
+from components.person.src.person_control import createPerson
+from components.person.src.person_db_model import Person
 from components.public_holidays.src.public_holidays_db_model import PublicHoliday
 
 

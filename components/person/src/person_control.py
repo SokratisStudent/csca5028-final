@@ -1,9 +1,11 @@
+import sqlalchemy.exc
+
 from components.database.main import db
 from datetime import datetime
 from settings import settings_data
-from components.personal_vacations.src.person_db_model import Person
-from components.personal_vacations.src.personal_vacations_db_model import PersonalVacation
-from components.personal_vacations.src.personal_vacations_http_request import PersonalVacationRequest
+from components.person.src.person_db_model import Person
+from components.person.src.personal_vacations_db_model import PersonalVacation
+from components.person.src.personal_vacations_http_request import PersonalVacationRequest
 from components.public_holidays.src.public_holiday_control import generateCountryAndHolidays
 from components.public_holidays.src.country_db_model import Country
 
@@ -33,8 +35,12 @@ class PersonalVacationObj:
 
 def createPerson(name: str, country: str) -> PersonObj:
     person_entry = Person(name=name, country_code=country)
-    db.session.add(person_entry)
-    db.session.commit()
+    try:
+        db.session.add(person_entry)
+        db.session.commit()
+    except sqlalchemy.exc.IntegrityError:
+        db.session.rollback()
+        return None
 
     country_result = Country.query.filter_by(country_code=country)
     if country_result.count() == 0:

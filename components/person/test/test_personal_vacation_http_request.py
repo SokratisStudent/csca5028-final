@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from components.personal_vacations.src.personal_vacations_http_request import PersonalVacationRequest
+from components.person.src.personal_vacations_http_request import PersonalVacationRequest
 from settings import settings_data
 
 email_1 = '''

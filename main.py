@@ -1,12 +1,13 @@
-from flask import request, render_template
+from flask import request, render_template, url_for, redirect
 
 from datetime import datetime
 
 from webapp.src.init_app import create_app
 from components.database.main import db
-from components.personal_vacations.src.person_db_model import Person
-from components.personal_vacations.src.person_control import createPerson, parseVacationsRequest, createVacations, PersonalVacationObj
+from components.person.src.person_db_model import Person
+from components.person.src.person_control import createPerson, parseVacationsRequest, createVacations, PersonalVacationObj
 from components.public_holidays.src.public_holiday_control import getHolidays
+from components.project.src.project_control import getActiveProjects, createProject
 
 app = create_app(db)
 current_person: Person
@@ -19,7 +20,7 @@ def main():
 
 @app.route("/projects")
 def projects():
-    return render_template("projects.html")
+    return render_template("projects.html", projects=getActiveProjects())
 
 
 @app.route("/person")
@@ -41,7 +42,7 @@ def vacation_email_parse():
     current_person, current_vacations_requested = parseVacationsRequest(email_text)
 
     if current_person == None:
-        return render_template("person_not_exist_error.html")
+        return render_template("error.html", error_message=f'Could not identify an existing entry in the system for the person asking for vacation! Please add the person before trying to add vacation time for them.')
 
     table_html = (f'<p> Email analysis indicates the below vacations will be taken: ' +
             '</p><table style="width:30%"><tr><th style="width:50%">Name</th><th>Date from</th><th>Date to</th></tr>')
@@ -76,6 +77,9 @@ def add_person():
     country = request.form.get("country", "")
 
     new_person = createPerson(name, country)
+    if new_person is None:
+        return render_template("error.html", error_message=f'{name} already exists in the database!')
+
     holidays = getHolidays(country)
 
     return_html = (f'<p>Created {new_person.name} working in {new_person.country_name} with the following holidays: ' +
@@ -89,7 +93,13 @@ def add_person():
     return return_html
 
 
-#@app.route("/createProject", methods=["POST"])
-#def add_project():
-#    project_name = request.form.get("project_name", "")
-#    return "Successfully created " + project_name + " project."
+@app.route("/createProject", methods=["POST"])
+def add_project():
+    project_name = request.form.get("project_name", "")
+
+    if createProject(project_name) is False:
+        return render_template("error.html", error_message=f'{project_name} already exists in the database!')
+
+    return redirect(url_for('projects'))
+
+
