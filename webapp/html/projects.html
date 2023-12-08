@@ -1,5 +1,15 @@
 {% extends 'base.html' %}
 
+{% block style %}
+    table, th, td {
+        border: 1px solid white;
+        border-collapse: collapse;
+    }
+    th, td {
+        background-color: #D4D4D4;
+    }
+{% endblock %}
+
 {% block content %}
     <h3> Create New project </h3>
     <form action="/createProject" method="POST">
@@ -8,15 +18,15 @@
     <br>
     <br>
     <h3> Existing projects </h3>
-    <div style="margin: auto">
-        {% for project in project_data.keys() %}
-        <div style="padding: 10px; background-color: #EEE; margin: 20px">
-            <p style="font-size: 24px"> {{ project }} </p>
-            {% for data in project_data[project] %}
-                <p style="font-size: 12px"> {{ data }} </p>
-            {% endfor %}
-        </div>
-        {% endfor %}
-    </div>
+    <br>
+    {{ project_table | safe }}
+    <br>
+    <table>
+        <tr><th colspan="2">Legend</th></tr>
+        <tr><td>Working Day</td><td style="background-color: #A0D0A0">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+        <tr><td>Weekend</td><td style="background-color: #A0A0A0">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+        <tr><td>Vacation/Holiday</td><td style="background-color: #A0A0D0">&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+    </table>
 
 {% endblock %}
+

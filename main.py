@@ -1,11 +1,11 @@
 from flask import request, render_template, url_for, redirect
-import json
 
 from webapp.src.init_app import create_app
 from components.database.main import db
 from components.person.src.person_db_model import Person
 from components.person.src.person_control import createPerson, parseVacationsRequest, createVacations, PersonalVacationObj, getAllAbsencesForPerson
 from components.project.src.project_control import getActiveProjects, createProject, getAllPeopleInProject
+from components.utility.src.utility import calculate_timespan
 
 app = create_app(db)
 current_person: Person = None
@@ -17,22 +17,38 @@ def main():
 
 
 @app.route("/projects")
-def projects(test_mode:bool=False):
-    full_data = {}
+def projects(test_mode=False):
+    timespan = 90
+    days, months, dates = calculate_timespan(timespan)
+    output = ""
     active_projects = getActiveProjects()
     for project in active_projects:
-        full_data[project.name] = []
+        output += f'<table><tr><th width=120>{project.name}</th>'
+        for month in months:
+            output += f'<th colspan=\"{months[month]}\">{month}</th>'
+        output += "</tr><tr><td></td>"
+        for day in days:
+            output += f'<td>{day:0>2}</td>'
+        output += "</tr>"
         people = getAllPeopleInProject(project)
         for employee in people:
+            output += "<tr>"
+            output += f'<td>{employee.name}</td>'
             absences = getAllAbsencesForPerson(employee)
-            full_data[project.name].append((employee.name, [absence.strftime("%Y-%m-%d") for absence in absences]))
-
-    project_data = json.dumps(full_data)
+            for i in range(timespan+1):
+                if dates[i].weekday() >= 5:
+                    output += f'<td style="background-color: #A0A0A0";></td>'
+                elif dates[i] in absences:
+                    output += f'<td style="background-color: #A0A0D0";></td>'
+                else:
+                    output += f'<td style="background-color: #A0D0A0"></td>'
+            output += "</tr>"
+        output += "</table><br><br>"
 
     if test_mode:
-        return project_data
+        return output
 
-    return render_template("projects.html", project_data=project_data)
+    return render_template("projects.html", project_table=output)
 
 
 @app.route("/person")
