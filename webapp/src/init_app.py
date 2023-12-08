@@ -1,7 +1,7 @@
-from flask import Flask
+from flask import Flask, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from components.database.main import createTables
-from components.utility.src.health_check import root_blueprint
+from components.utility.src.rest_endpoints import root_blueprint
 
 
 def create_app(db: SQLAlchemy) -> Flask:

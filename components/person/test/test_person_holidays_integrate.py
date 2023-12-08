@@ -6,7 +6,9 @@ from webapp.src.init_app import create_test_app
 from components.person.src.person_control import createPerson, parseVacationsRequest, createVacations, getAllAbsencesForPerson
 from components.person.src.person_db_model import Person
 from components.public_holidays.src.public_holidays_db_model import PublicHoliday
-from components.project.src.project_control import createProject, getProjectByName
+from components.project.src.project_control import createProject
+from components.person.src.person_control import PersonalVacationObj
+from components.person.src.personal_vacations_db_model import PersonalVacation
 
 class TestPersonVacationIntegration(TestCase):
     def setup_class(self):
@@ -49,3 +51,23 @@ class TestPersonVacationIntegration(TestCase):
 
             tomorrow = datetime.now().date() + timedelta(days=1)
             assert tomorrow in dates
+
+    def test_createVacations(self):
+        with self.app.app_context():
+            createPerson("TestGuy", "US", "TestProject")
+            person_entry = Person.query.filter_by(name="TestGuy").first()
+            vacations = [PersonalVacationObj("TestGuy", "2023-12-07", "2023-12-17")]
+            createVacations(person_entry, vacations)
+
+            vacation_entries = PersonalVacation.query.filter_by(person_id=person_entry.id).all()
+
+            assert len(vacation_entries) == 1
+            assert vacation_entries[0].start_date == datetime.strptime("20231207", "%Y%m%d")
+            assert vacation_entries[0].end_date == datetime.strptime("20231217", "%Y%m%d")
+
+            more_vacations = [PersonalVacationObj("TestGuy", "2024-01-02", "2024-01-04"), PersonalVacationObj("TestGuy", "2024-02-02", "2024-02-04")]
+            createVacations(person_entry, more_vacations)
+
+            vacation_entries = PersonalVacation.query.filter_by(person_id=person_entry.id).all()
+
+            assert len(vacation_entries) == 3

@@ -19,28 +19,28 @@ class TestProjectControl(TestCase):
     def test_projects(self):
         with self.app.app_context():
             project_list = getActiveProjects()
-            assert len(project_list) == 0
+            initial_count = len(project_list)
             result = createProject("RandomProject1")
             assert result is not None
             project_list = getActiveProjects()
-            assert len(project_list) == 1
-            assert project_list[0].name == "RandomProject1"
+            assert len(project_list) == (1 + initial_count)
+            assert "RandomProject1" in [project.name for project in project_list]
             result = createProject("RandomProject2")
             assert result is not None
             project_list = getActiveProjects()
-            assert len(project_list) == 2
+            assert len(project_list) == (2 + initial_count)
             result = createProject("RandomProject1")
             assert result is None
             project_list = getActiveProjects()
-            assert len(project_list) == 2
+            assert len(project_list) == (2 + initial_count)
 
     def test_getAllPeopleInProject(self):
         with self.app.app_context():
-            project1 = createProject("RandomProject1")
-            project2 = createProject("RandomProject2")
-            createPerson("TestPerson1", "US", "RandomProject1")
-            createPerson("TestPerson2", "GB", "RandomProject2")
-            createPerson("TestPerson3", "GR", "RandomProject1")
+            project1 = createProject("RandomProject4")
+            createProject("RandomProject5")
+            createPerson("TestPerson1", "US", "RandomProject4")
+            createPerson("TestPerson2", "GB", "RandomProject5")
+            createPerson("TestPerson3", "GR", "RandomProject4")
             people = getAllPeopleInProject(project1)
             assert len(people) == 2
             assert people[0].name == "TestPerson1" or people[1].name == "TestPerson1"

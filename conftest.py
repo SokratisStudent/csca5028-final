@@ -1,7 +1,7 @@
 import pytest
 
 from flask import Flask
-from components.utility.src.health_check import root_blueprint
+from components.utility.src.rest_endpoints import root_blueprint
 
 
 @pytest.fixture
