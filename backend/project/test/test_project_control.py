@@ -1,10 +1,10 @@
 from unittest import TestCase
 from datetime import datetime
 
-from components.database.main import db
+from backend.database.main import db
 from webapp.src.init_app import create_test_app
-from components.project.src.project_control import createProject, getActiveProjects, getAllPeopleInProject
-from components.person.src.person_control import createPerson
+from backend.project.src.project_control import createProject, getActiveProjects, getAllPeopleInProject
+from backend.person.src.person_control import createPerson
 
 
 class TestProjectControl(TestCase):
@@ -41,7 +41,7 @@ class TestProjectControl(TestCase):
             createPerson("TestPerson1", "US", "RandomProject4")
             createPerson("TestPerson2", "GB", "RandomProject5")
             createPerson("TestPerson3", "GR", "RandomProject4")
-            people = getAllPeopleInProject(project1)
+            people = getAllPeopleInProject(project1.id)
             assert len(people) == 2
             assert people[0].name == "TestPerson1" or people[1].name == "TestPerson1"
             assert people[0].name == "TestPerson3" or people[1].name == "TestPerson3"

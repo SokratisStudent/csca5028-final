@@ -1,10 +1,10 @@
 from unittest import TestCase
 
-from components.database.main import db
+from backend.database.main import db
 from webapp.src.init_app import create_test_app
-from components.public_holidays.src.public_holiday_control import generateCountryAndHolidays
-from components.public_holidays.src.country_db_model import Country
-from components.public_holidays.src.public_holidays_db_model import PublicHoliday
+from backend.public_holidays.src.public_holiday_control import generateCountryAndHolidays
+from backend.public_holidays.src.country_db_model import Country
+from backend.public_holidays.src.public_holidays_db_model import PublicHoliday
 
 
 class TestPublicHolidayIntegrate(TestCase):

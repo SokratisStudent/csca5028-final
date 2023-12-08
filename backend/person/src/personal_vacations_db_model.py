@@ -1,4 +1,4 @@
-from components.database.main import db
+from backend.database.main import db
 
 
 class PersonalVacation(db.Model):

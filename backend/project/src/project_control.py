@@ -1,8 +1,8 @@
 import sqlalchemy.exc
 
-from components.database.main import db
-from components.project.src.project_model import Project
-from components.person.src.person_db_model import Person
+from backend.database.main import db
+from backend.project.src.project_model import Project
+from backend.person.src.person_db_model import Person
 
 
 def createProject(name: str) -> Project:
@@ -25,7 +25,5 @@ def getProjectByName(name: str) -> Project:
     return Project.query.filter_by(name=name).first()
 
 
-def getAllPeopleInProject(project: Project) -> list[Person]:
-    return Person.query.filter_by(project_id=project.id).all()
-
-
+def getAllPeopleInProject(project_id: int) -> list[Person]:
+    return Person.query.filter_by(project_id=project_id).all()

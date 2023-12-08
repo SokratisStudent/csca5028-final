@@ -1,14 +1,14 @@
 from unittest import TestCase
 from datetime import datetime, timedelta
 
-from components.database.main import db
+from backend.database.main import db
 from webapp.src.init_app import create_test_app
-from components.person.src.person_control import createPerson, parseVacationsRequest, createVacations, getAllAbsencesForPerson
-from components.person.src.person_db_model import Person
-from components.public_holidays.src.public_holidays_db_model import PublicHoliday
-from components.project.src.project_control import createProject
-from components.person.src.person_control import PersonalVacationObj
-from components.person.src.personal_vacations_db_model import PersonalVacation
+from backend.person.src.person_control import createPerson, parseVacationsRequest, createVacations, getAllAbsencesForPerson
+from backend.person.src.person_db_model import Person
+from backend.public_holidays.src.public_holidays_db_model import PublicHoliday
+from backend.project.src.project_control import createProject
+from backend.person.src.person_control import PersonalVacationObj
+from backend.person.src.personal_vacations_db_model import PersonalVacation
 
 class TestPersonVacationIntegration(TestCase):
     def setup_class(self):

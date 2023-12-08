@@ -1,10 +1,10 @@
 from unittest import TestCase
 
-from components.database.main import db
+from backend.database.main import db
 from webapp.src.init_app import create_test_app
 
-from components.person.src.person_control import createPerson
-from components.project.src.project_control import createProject
+from backend.person.src.person_control import createPerson
+from backend.project.src.project_control import createProject
 
 from main import projects
 

@@ -1,9 +1,9 @@
-from components.database.main import db
+from backend.database.main import db
 from datetime import datetime
 from settings import settings_data
-from components.public_holidays.src.country_db_model import Country
-from components.public_holidays.src.public_holidays_db_model import PublicHoliday
-from components.public_holidays.src.public_holidays_http_request import PublicHolidayRequest
+from backend.public_holidays.src.country_db_model import Country
+from backend.public_holidays.src.public_holidays_db_model import PublicHoliday
+from backend.public_holidays.src.public_holidays_http_request import PublicHolidayRequest
 
 
 class PublicHolidayObj:

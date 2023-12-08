@@ -2,15 +2,15 @@ import sqlalchemy.exc
 
 from datetime import datetime, timedelta
 
-from components.database.main import db
+from backend.database.main import db
 from settings import settings_data
-from components.person.src.person_db_model import Person
-from components.person.src.personal_vacations_db_model import PersonalVacation
-from components.public_holidays.src.country_db_model import Country
-from components.public_holidays.src.public_holidays_db_model import PublicHoliday
-from components.person.src.personal_vacations_http_request import PersonalVacationRequest
-from components.public_holidays.src.public_holiday_control import generateCountryAndHolidays
-from components.project.src.project_control import getProjectByName
+from backend.person.src.person_db_model import Person
+from backend.person.src.personal_vacations_db_model import PersonalVacation
+from backend.public_holidays.src.country_db_model import Country
+from backend.public_holidays.src.public_holidays_db_model import PublicHoliday
+from backend.person.src.personal_vacations_http_request import PersonalVacationRequest
+from backend.public_holidays.src.public_holiday_control import generateCountryAndHolidays
+from backend.project.src.project_control import getProjectByName
 
 
 class PersonObj:
@@ -37,7 +37,11 @@ class PersonalVacationObj:
 
 
 def createPerson(name: str, country: str, project_name: str) -> PersonObj:
-    project_id = getProjectByName(project_name).id
+    project_entry = getProjectByName(project_name)
+    if project_entry is None:
+        return None
+
+    project_id = project_entry.id
     person_entry = Person(name=name, country_code=country, project_id=project_id)
     try:
         db.session.add(person_entry)

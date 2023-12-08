@@ -2,11 +2,11 @@ import datetime
 from unittest import TestCase
 from unittest.mock import Mock
 
-from components.database.main import db
+from backend.database.main import db
 from webapp.src.init_app import create_test_app
-from components.person.src.person_control import PersonalVacationObj, createPerson, getAllAbsencesForPerson
-from components.person.src.person_db_model import Person
-from components.project.src.project_control import createProject
+from backend.person.src.person_control import PersonalVacationObj, createPerson, getAllAbsencesForPerson
+from backend.person.src.person_db_model import Person
+from backend.project.src.project_control import createProject
 
 
 class TestPersonController(TestCase):

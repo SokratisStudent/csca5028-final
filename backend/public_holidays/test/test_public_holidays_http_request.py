@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from components.public_holidays.src.public_holidays_http_request import PublicHolidayRequest
+from backend.public_holidays.src.public_holidays_http_request import PublicHolidayRequest
 from settings import settings_data
 
 

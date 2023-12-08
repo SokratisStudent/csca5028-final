@@ -1,9 +1,9 @@
 from unittest import TestCase
 from datetime import datetime
 
-from components.database.main import db
+from backend.database.main import db
 from webapp.src.init_app import create_test_app
-from components.public_holidays.src.public_holiday_control import parseRequest
+from backend.public_holidays.src.public_holiday_control import parseRequest
 
 
 class TestPublicHolidayControl(TestCase):

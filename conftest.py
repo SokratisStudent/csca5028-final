@@ -1,7 +1,7 @@
 import pytest
 
 from flask import Flask
-from components.utility.src.rest_endpoints import root_blueprint
+from webapp.src.rest_endpoints import root_blueprint
 
 
 @pytest.fixture

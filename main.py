@@ -1,15 +1,21 @@
 from flask import request, render_template, url_for, redirect
 
 from webapp.src.init_app import create_app
-from components.database.main import db
-from components.person.src.person_db_model import Person
-from components.person.src.person_control import createPerson, parseVacationsRequest, createVacations, PersonalVacationObj, getAllAbsencesForPerson
-from components.project.src.project_control import getActiveProjects, createProject, getAllPeopleInProject
-from components.utility.src.utility import calculate_timespan
+from backend.database.main import db
+from backend.person.src.person_db_model import Person
+from backend.person.src.person_control import parseVacationsRequest, createVacations, PersonalVacationObj, getAllAbsencesForPerson
+from backend.project.src.project_control import getActiveProjects
+from webapp.src.utility import calculate_timespan
+from webapp.src.request_sender import RabbitRequestSender
+from webapp.src.data_holder import DataHolder
 
 app = create_app(db)
 current_person: Person = None
 current_vacations_requested: list[PersonalVacationObj] = []
+
+data_holder = DataHolder()
+request_sender = RabbitRequestSender(data_holder)
+
 
 @app.route("/")
 def main():
@@ -21,7 +27,7 @@ def projects(test_mode=False):
     timespan = 90
     days, months, dates = calculate_timespan(timespan)
     output = ""
-    active_projects = getActiveProjects()
+    active_projects = data_holder.getActiveProjects()
     for project in active_projects:
         output += f'<table><tr><th width=120>{project.name}</th>'
         for month in months:
@@ -30,7 +36,7 @@ def projects(test_mode=False):
         for day in days:
             output += f'<td>{day:0>2}</td>'
         output += "</tr>"
-        people = getAllPeopleInProject(project)
+        people = data_holder.getAllPeopleInProject(project)
         for employee in people:
             output += "<tr>"
             output += f'<td>{employee.name}</td>'
@@ -108,18 +114,21 @@ def add_person():
     country = request.form.get("country", "")
     project_name = request.form.get("project", "")
 
-    new_person = createPerson(name, country, project_name)
-    if new_person is None:
-        return render_template("error.html", error_message=f'{name} already exists in the database!')
+    request_sender.createPerson(name, country, project_name)
 
-    return render_template("success.html", success_message=f'Successfully created {new_person.name} working in {new_person.country_name} for {project_name}')
+    #new_person = createPerson(name, country, project_name)
+    #if new_person is None:
+    #    return render_template("error.html", error_message=f'{name} already exists in the database!')
+
+    return render_template("success.html", success_message=f'Successfully created {name} working in {country} for {project_name}')
 
 
 @app.route("/createProject", methods=["POST"])
 def add_project():
     project_name = request.form.get("project_name", "")
+    request_sender.createProject(project_name)
 
-    if createProject(project_name) is False:
-        return render_template("error.html", error_message=f'{project_name} already exists in the database!')
+    #if createProject(project_name) is False:
+    #    return render_template("error.html", error_message=f'{project_name} already exists in the database!')
 
     return redirect(url_for('projects'))

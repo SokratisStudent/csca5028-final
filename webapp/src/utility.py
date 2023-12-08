@@ -3,7 +3,7 @@ import calendar
 
 
 def calculate_timespan(days_ahead: int) -> (list[int], dict[str, int], list[datetime]):
-    assert(days_ahead > 0)
+    assert days_ahead > 0
 
     current = datetime.now().date()
     dates = [current]

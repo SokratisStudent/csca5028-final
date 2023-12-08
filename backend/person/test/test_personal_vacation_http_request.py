@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import Mock
 
-from components.person.src.personal_vacations_http_request import PersonalVacationRequest
+from backend.person.src.personal_vacations_http_request import PersonalVacationRequest
 from settings import settings_data
 
 email_1 = '''
