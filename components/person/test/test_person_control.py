@@ -1,12 +1,13 @@
+import datetime
 from unittest import TestCase
-from datetime import datetime
+from unittest.mock import Mock
 
 from components.database.main import db
 from webapp.src.init_app import create_test_app
-from components.person.src.person_control import PersonalVacationObj, createPerson, createVacations
+from components.person.src.person_control import PersonalVacationObj, createPerson, createVacations, getAllAbsencesForPerson
 from components.person.src.person_db_model import Person
 from components.person.src.personal_vacations_db_model import PersonalVacation
-from components.project.src.project_control import createProject, getProjectByName
+from components.project.src.project_control import createProject
 
 
 class TestPersonController(TestCase):
@@ -32,6 +33,32 @@ class TestPersonController(TestCase):
 
             person = createPerson("TestGuy", "SP", "TestProject")
             assert person is None
+
+    def test_createPersonMockDate(self):
+        with self.app.app_context():
+            global datetime
+            mock_today = datetime.datetime.strptime('2020-01-07', '%Y-%m-%d')
+            datetime = Mock()
+            datetime.datetime.today.return_value = mock_today
+            person = createPerson("TestGuy2", "GB", "TestProject")
+            person_entry = Person.query.filter_by(name=person.name).first()
+            dates = getAllAbsencesForPerson(person_entry)
+
+            for date in dates:
+                assert date.year == 2020
+
+    def test_createPersonMockDate2(self):
+        with self.app.app_context():
+            global datetime
+            mock_today = datetime.datetime.strptime('2020-10-01', '%Y-%m-%d')
+            datetime = Mock()
+            datetime.datetime.today.return_value = mock_today
+            person = createPerson("TestGuy2", "GB", "TestProject")
+            person_entry = Person.query.filter_by(name=person.name).first()
+            dates = getAllAbsencesForPerson(person_entry)
+
+            for date in dates:
+                assert date.year == 2020 or date.year == 2021
 
     def test_personal_vacation_class(self):
         vacation = PersonalVacationObj("John", "2023-12-07", "2023-12-17")

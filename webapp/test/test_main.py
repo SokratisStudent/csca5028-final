@@ -23,4 +23,4 @@ class TestMain(TestCase):
             createPerson("Tony Stark", "US", "Iron Man")
 
             return_value = projects(test_mode=True)
-            print(return_value)
+            assert return_value.startswith('<table><tr><th width=120>Iron Man')

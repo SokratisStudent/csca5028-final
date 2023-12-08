@@ -49,7 +49,8 @@ def createPerson(name: str, country: str, project_name: str) -> PersonObj:
     country_result = Country.query.filter_by(country_code=country)
     if country_result.count() == 0:
         generateCountryAndHolidays(country, datetime.now().year)
-        if datetime.now().month > 10:
+        # since we are displaying 3 months of data ahead, if we are past Sep, fetch the next year as well
+        if datetime.now().month > 9:
             generateCountryAndHolidays(country, datetime.now().year+1)
         country_result = Country.query.filter_by(country_code=country)
 

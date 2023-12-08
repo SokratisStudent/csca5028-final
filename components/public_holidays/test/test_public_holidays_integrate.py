@@ -42,4 +42,3 @@ class TestPublicHolidayIntegrate(TestCase):
 
             holiday_entries_after = len(PublicHoliday.query.all())
             assert (holiday_entries_mid == holiday_entries_after)
-

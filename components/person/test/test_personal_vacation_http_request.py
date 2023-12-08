@@ -1,4 +1,5 @@
 from unittest import TestCase
+from unittest.mock import Mock
 
 from components.person.src.personal_vacations_http_request import PersonalVacationRequest
 from settings import settings_data
@@ -44,3 +45,8 @@ class TestPersonalVacationHttpRequest(TestCase):
         assert response[1]['start_date'] == '2023-12-22'
         assert response[1]['end_date'] == '2023-12-29'
 
+    def test_mock_service(self):
+        mockVacationRequestService = Mock()
+        vacation_request = mockVacationRequestService
+        response = vacation_request.fetch_data('Hello World')
+        mockVacationRequestService.fetch_data.assert_called_with('Hello World')

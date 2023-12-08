@@ -3,8 +3,8 @@ from datetime import datetime
 
 from components.database.main import db
 from webapp.src.init_app import create_test_app
-from components.project.src.project_control import createProject, getActiveProjects
-from components.project.src.project_model import Project
+from components.project.src.project_control import createProject, getActiveProjects, getAllPeopleInProject
+from components.person.src.person_control import createPerson
 
 
 class TestProjectControl(TestCase):
@@ -33,5 +33,20 @@ class TestProjectControl(TestCase):
             assert result is None
             project_list = getActiveProjects()
             assert len(project_list) == 2
+
+    def test_getAllPeopleInProject(self):
+        with self.app.app_context():
+            project1 = createProject("RandomProject1")
+            project2 = createProject("RandomProject2")
+            createPerson("TestPerson1", "US", "RandomProject1")
+            createPerson("TestPerson2", "GB", "RandomProject2")
+            createPerson("TestPerson3", "GR", "RandomProject1")
+            people = getAllPeopleInProject(project1)
+            assert len(people) == 2
+            assert people[0].name == "TestPerson1" or people[1].name == "TestPerson1"
+            assert people[0].name == "TestPerson3" or people[1].name == "TestPerson3"
+
+
+
 
 
