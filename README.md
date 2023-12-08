@@ -3,7 +3,10 @@ Final Project for CSCA 5028 - Applications of Software Architecture for Big Data
 
 ### Initialize python environment
 ```bash
+python3 -m venv venv
 source venv/bin/activate
+python3 -m pip install --upgrade pip
+python3 -m pip install -r requirements.txt
 ```
 
 ### Run tests
@@ -16,13 +19,5 @@ pytest -v
  flask --debug --app main.py run
 ```
 To test:
-(a) open browser to http://localhost:5000/
-(b) Add any name in any country, this will add the public holidays of that country in the database (as given by https://api-ninjas.com/api/holidays)
+open browser to http://localhost:5000/
 
-### Look at the database data (requires sqlite3 installation)
-```bash
-sqlite3 instance/vacations.sqlite3
-```
-Check out
-(a) select * from country;
-(b) select * from public_holiday;
